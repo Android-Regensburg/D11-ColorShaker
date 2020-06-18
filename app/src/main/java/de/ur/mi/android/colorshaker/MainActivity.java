@@ -18,6 +18,12 @@ import de.ur.mi.android.colorshaker.color.BackgroundColorAnimatorListener;
 import de.ur.mi.android.colorshaker.color.ColorHelper;
 import de.ur.mi.android.colorshaker.colorselector.SelectorActivity;
 
+/**
+ * Zentrale Activity der ColorShaker-App
+ *
+ * Diese App erlaubt die Auswahl zweier RGB-Farben, die beim Schütteln des Geräts zu einer neuen
+ * Farbmischung kombiniert werden.
+ */
 public class MainActivity extends AppCompatActivity implements ShakeSensorListener {
 
     private static final int REQUEST_FIRST_COLOR = 101;
@@ -26,16 +32,16 @@ public class MainActivity extends AppCompatActivity implements ShakeSensorListen
     private View firstColorSelector;
     private View secondColorSelector;
     private TextView resultColor;
-
     private ColorHelper colorHelper;
+    private ShakeSensor shakeSensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initColors();
         initUI();
-        setDefaults();
         initSensor();
+        setDefaults();
     }
 
     private void initColors() {
@@ -68,9 +74,10 @@ public class MainActivity extends AppCompatActivity implements ShakeSensorListen
     }
 
     public void initSensor() {
-        ShakeSensor shakeSensor = new ShakeSensor(this, this);
+        shakeSensor = new ShakeSensor(this, this);
+        shakeSensor.start();
     }
-
+    
     private void setBackgroundColorForSelector(View selector, Color color) {
         ColorStateList colorStateList = colorHelper.createColorStateList(color);
         selector.setBackgroundTintList(colorStateList);
@@ -109,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements ShakeSensorListen
                 setBackgroundColorForSelector(secondColorSelector, color);
                 colorHelper.setSecondColor(color);
                 break;
-
         }
     }
 

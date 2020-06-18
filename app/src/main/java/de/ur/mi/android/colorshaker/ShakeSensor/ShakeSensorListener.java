@@ -1,6 +1,11 @@
 package de.ur.mi.android.colorshaker.ShakeSensor;
 
-public interface  ShakeSensorListener {
+/**
+ * Der ShakeSensor kann Komponenten, die dieses Interface implementieren, über relevante Bewegungen
+ * des Geräts informieren.
+ */
+public interface ShakeSensorListener {
 
-    public void onShakingDetected();
+    void onShakingDetected();
+
 }
