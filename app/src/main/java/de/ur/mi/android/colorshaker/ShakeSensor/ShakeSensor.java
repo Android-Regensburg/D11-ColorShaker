@@ -5,20 +5,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 public class ShakeSensor implements SensorEventListener {
 
-    private static final float SPEED_THRESHOLD = 400;
+    private static final float SPEED_THRESHOLD = 10;
     private static final long LISTENER_UPDATE_THRESHOLD_IN_MS = 5000;
 
     private ShakeSensorListener listener;
     private long lastUpdate;
     private long lastListenerUpdate;
-    private float lastX;
     private float lastY;
-    private float lastZ;
-    private boolean initalSensorChangeReceived = false;
+    private boolean initialSensorChangeReceived = false;
 
     public ShakeSensor(Context context, ShakeSensorListener listener) {
         this.listener = listener;
@@ -35,25 +32,22 @@ public class ShakeSensor implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (initalSensorChangeReceived == false) {
+        if (initialSensorChangeReceived == false) {
             lastUpdate = System.currentTimeMillis();
             lastListenerUpdate = lastUpdate;
-            lastX = event.values[0];
             lastY = event.values[1];
-            lastZ = event.values[2];
-            initalSensorChangeReceived = true;
+            initialSensorChangeReceived = true;
             return;
         }
         long now = System.currentTimeMillis();
         long updateDelta = now - lastUpdate;
-        float x = event.values[0];
+        if(updateDelta < 1000) {
+            return;
+        }
         float y = event.values[1];
-        float z = event.values[2];
-        float speed = Math.abs((x + y + z) - (lastX - lastY - lastZ)) / updateDelta * 1000;
+        float speed = Math.abs(lastY - y) / updateDelta * 1000;
         lastUpdate = now;
-        lastX = x;
         lastY = y;
-        lastZ = z;
         if (speed > SPEED_THRESHOLD) {
             long listenerUpdateDelta = now - lastListenerUpdate;
             if (listenerUpdateDelta > LISTENER_UPDATE_THRESHOLD_IN_MS) {

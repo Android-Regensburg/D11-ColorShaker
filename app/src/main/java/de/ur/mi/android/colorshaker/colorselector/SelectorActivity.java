@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -16,8 +15,8 @@ import de.ur.mi.android.colorshaker.R;
 
 public class SelectorActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
-    private static final int DEFAULE_SEEKBAR_VALUE = 125;
-    public static final String USER_SELECTED_COLOR_AS_ARGB = "USER_SELECTED_COLOR_AS_ARGB";
+    private static final int DEFAULT_SEEKBAR_VALUE = 125;
+    public static final String USER_SELECTED_COLOR_AS_RGB = "USER_SELECTED_COLOR_AS_RGB";
 
     private View colorPreview;
     private SeekBar redValueBar;
@@ -39,9 +38,9 @@ public class SelectorActivity extends AppCompatActivity implements SeekBar.OnSee
         redValueBar.setOnSeekBarChangeListener(this);
         greenValueBar.setOnSeekBarChangeListener(this);
         blueValueBar.setOnSeekBarChangeListener(this);
-        redValueBar.setProgress(DEFAULE_SEEKBAR_VALUE);
-        greenValueBar.setProgress(DEFAULE_SEEKBAR_VALUE);
-        blueValueBar.setProgress(DEFAULE_SEEKBAR_VALUE);
+        redValueBar.setProgress(DEFAULT_SEEKBAR_VALUE);
+        greenValueBar.setProgress(DEFAULT_SEEKBAR_VALUE);
+        blueValueBar.setProgress(DEFAULT_SEEKBAR_VALUE);
         Button confirmColorButton = findViewById(R.id.select_color_button);
         confirmColorButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +55,6 @@ public class SelectorActivity extends AppCompatActivity implements SeekBar.OnSee
         int red = redValueBar.getProgress();
         int green = greenValueBar.getProgress();
         int blue = blueValueBar.getProgress();
-        Log.d("ColorShaker", String.format("Red: %s, Green: %s, Blue: %s", red, green, blue));
         return Color.rgb(red, green, blue);
     }
 
@@ -68,7 +66,7 @@ public class SelectorActivity extends AppCompatActivity implements SeekBar.OnSee
     private void onmConfirmColorButtonClicked() {
         int resultColor = getColorFromCurrentSeekbarValues();
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(USER_SELECTED_COLOR_AS_ARGB, resultColor);
+        resultIntent.putExtra(USER_SELECTED_COLOR_AS_RGB, resultColor);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
